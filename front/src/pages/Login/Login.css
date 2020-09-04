@@ -1,0 +1,31 @@
+.main-container {
+    min-height: 100vh;
+}
+.secondary-container {
+    width: 400px;
+}
+.Login-button {
+    width: 90%;
+    height: 50px;
+    color: #fff !important;
+}
+.error-icon {
+    color: red;
+}
+.logo_home {
+    width: 90%;
+    text-align: center;
+}
+.Lorem-ipsum-dolor-si {
+    max-width: 80% !important;
+    text-align: center !important;
+    font-size: 16px !important;
+}
+.Bem-vindo-ao-blog {
+    max-width: 50% !important;
+    text-align: center !important;
+    font-size: 12px !important;
+}
+.helper-text {
+    text-align: center !important;
+}

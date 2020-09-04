@@ -1,0 +1,28 @@
+
+.UserAdd_detail-paper {
+    padding: 20px;
+    margin: 10px;
+    width: 100%;
+}
+.UserAdd_alert {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.UserAdd_detail-text {
+    font-size: 17px;
+    color: #8d8c8c;
+}
+
+.UserAdd_form-input {
+    width: 100%;
+    margin-bottom: 10px !important;
+}
+
+.UserAdd_Save-button {
+    width: 100%;
+    height: 50px;
+    color: #fff !important;
+    margin-top: 10px !important;
+}
+

@@ -1,0 +1,14 @@
+.Comments_container {
+    margin-top: 10px;
+}
+
+.Comments_avatar {
+    width: 70px;
+    height: 70px;
+}
+
+.Comments_content_container {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+}

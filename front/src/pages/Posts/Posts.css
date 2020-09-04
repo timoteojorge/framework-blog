@@ -1,0 +1,29 @@
+.Posts_main-container {
+    min-height: 100vh;
+}
+
+.Posts_no-posts-found {
+    color: #b5b4b4 !important;
+}
+
+.Posts_paper {
+    padding: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.Posts_post-details {
+    padding: 20px;
+}
+
+.Posts_post-type {
+    color: #8d8c8c;
+}
+
+.Posts_posts-container {
+    margin-top: 30px;
+}
+
+.Posts_author-label {
+    font-size: 12px;
+}

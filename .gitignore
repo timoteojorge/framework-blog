@@ -1,0 +1,4 @@
+/front/node_modules
+/api/target
+/api/.mvn
+/api/.idea

@@ -1,0 +1,29 @@
+.Albums_main-container {
+    min-height: 100vh;
+}
+
+.no-posts-found {
+    color: #b5b4b4 !important;
+}
+
+.paper {
+    padding: 20px;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.post-details {
+    padding: 20px;
+}
+
+.post-type {
+    color: #8d8c8c;
+}
+
+.posts-container {
+    margin-top: 30px;
+}
+
+.author-label {
+    font-size: 12px;
+}

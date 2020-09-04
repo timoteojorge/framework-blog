@@ -1,0 +1,28 @@
+{
+  "name": "blog",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "axios": "^0.20.0",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "jwt-decode": "^2.2.0",
+    "moment": "^2.27.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-draft-wysiwyg": "^1.14.5",
+    "react-dropzone": "^11.0.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "0.9.x"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "PORT=4000 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

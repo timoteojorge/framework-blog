@@ -1,0 +1,18 @@
+.logo-nav {
+    width: 250px;
+}
+.search-input-container {
+    width: 100%;
+}
+.search-input {
+    color: #fff !important;
+}
+.form-toolbar {
+    color: #fff;
+}
+.user-menu-container {
+    width: 200px;
+}
+.MuiDrawer-paperAnchorLeft{
+    width: 300px;
+}
