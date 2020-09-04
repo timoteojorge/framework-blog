@@ -1,9 +1,0 @@
-CREATE SCHEMA IF NOT EXISTS db_blog;
-
-INSERT INTO db_blog."role"
-(id, description)
-VALUES(1, 'ROLE_ADMIN') ON CONFLICT DO NOTHING;
-
-INSERT INTO db_blog."role"
-(id, description)
-VALUES(2, 'ROLE_USER') ON CONFLICT DO NOTHING;
