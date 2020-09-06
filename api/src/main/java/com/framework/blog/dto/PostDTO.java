@@ -16,7 +16,7 @@ public class PostDTO {
 
     private Long id;
     private String htmlContent;
-    private List<PostFileDTO> postFiles;
+    private List<BlogFileDTO> postFiles;
     private List<CommentDTO> comments;
     private String authorName;
     private String title;

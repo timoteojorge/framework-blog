@@ -53,11 +53,7 @@ public class UserService {
         if (hasErrors) {
             throw new BusinessException(errors.stream().collect(Collectors.joining("\r\n")));
         }
-        User user = User.builder()
-                .email(userDTO.getEmail())
-                .name(userDTO.getName())
-                .password(userDTO.getPassword())
-                .build();
+        User user = userDTO.toEntity();
         return repository.save(user);
     }
 }

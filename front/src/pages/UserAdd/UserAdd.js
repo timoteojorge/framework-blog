@@ -1,9 +1,9 @@
-import { Button, Grid, IconButton, InputAdornment, Paper, TextField, Typography, makeStyles } from '@material-ui/core';
+import { Button, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from '@material-ui/core';
 import { LockOpen, Visibility, VisibilityOff } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 import React, { useState } from 'react';
 import config from '../../config';
 import './UserAdd.css';
-import Alert from '@material-ui/lab/Alert';
 
 export default function UserAdd({ setBackdropOpen }) {
     const [name, setName] = useState('');

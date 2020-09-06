@@ -1,6 +1,7 @@
 package com.framework.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.framework.blog.dto.BlogFileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,26 +23,35 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode(of = {"id"})
 @Table(name = "file", schema = "db_blog")
-@ToString(of = { "id"})
+@ToString(of = {"id"})
 public class BlogFile {
 
-	@Id
-	@SequenceGenerator(name = "file_seq", sequenceName = "db_blog.file_seq", allocationSize = 1, schema = "db_blog")
+    @Id
+    @SequenceGenerator(name = "file_seq", sequenceName = "db_blog.file_seq", allocationSize = 1, schema = "db_blog")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "file_seq")
-	private Long id;
+    private Long id;
 
-	@Column(name = "file_name")
-	private String fileName;
+    @Column(name = "file_name")
+    private String fileName;
 
-	@Column(name = "file_type")
-	private String fileType;
+    @Column(name = "file_type")
+    private String fileType;
 
-	@Column(columnDefinition="bytea")
-	private byte[] data;
+    @Column(columnDefinition = "bytea")
+    private byte[] data;
 
-	@Column(name = "file_size")
-	private long fileSize;
+    @Column(name = "file_size")
+    private long fileSize;
+
+    public BlogFileDTO toDTO() {
+		return BlogFileDTO.builder()
+				.id(this.id)
+				.fileName(this.fileName)
+				.data(this.data)
+				.fileSize(this.fileSize)
+				.build();
+    }
 
 }

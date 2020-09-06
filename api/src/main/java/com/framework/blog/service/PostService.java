@@ -1,11 +1,11 @@
 package com.framework.blog.service;
 
+import com.framework.blog.dto.BlogFileDTO;
 import com.framework.blog.dto.CommentDTO;
 import com.framework.blog.dto.PostDTO;
-import com.framework.blog.dto.PostFileDTO;
+import com.framework.blog.entity.BlogFile;
 import com.framework.blog.entity.Comment;
 import com.framework.blog.entity.Post;
-import com.framework.blog.entity.BlogFile;
 import com.framework.blog.exception.BusinessException;
 import com.framework.blog.exception.ResourceNotFoundException;
 import com.framework.blog.exception.UnauthorizedException;
@@ -64,7 +64,7 @@ public class PostService {
         return this.repository.save(post);
     }
 
-    private List<BlogFile> postFilesFromDTO(List<PostFileDTO> postFileDTO) {
+    private List<BlogFile> postFilesFromDTO(List<BlogFileDTO> postFileDTO) {
         if (postFileDTO != null) {
             return postFileDTO.stream()
                     .map(dto -> BlogFile.builder().data(dto.getData())

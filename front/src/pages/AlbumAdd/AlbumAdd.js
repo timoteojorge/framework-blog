@@ -1,96 +1,78 @@
-import { Grid, Paper, TextField } from '@material-ui/core';
+import { Button, Grid, Paper, TextField } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import Dropzone from 'react-dropzone-uploader';
+import { Redirect } from 'react-router-dom';
+import { Subject } from 'rxjs';
 import config from '../../config';
+import SessionService from '../../services/SessionService';
 import './AlbumAdd.css';
 
-const thumbsContainer = {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 16
-};
 
-const thumb = {
-    display: 'inline-flex',
-    borderRadius: 2,
-    border: '1px solid #eaeaea',
-    marginBottom: 8,
-    marginRight: 8,
-    width: 100,
-    height: 100,
-    padding: 4,
-    boxSizing: 'border-box'
-};
-
-const thumbInner = {
-    display: 'flex',
-    minWidth: 0,
-    overflow: 'hidden'
-};
-
-const img = {
-    display: 'block',
-    width: 'auto',
-    height: '100%'
-};
-
-export default function AlbumAdd() {
+export default function AlbumAdd({ setBackdropOpen }) {
     const [files, setFiles] = useState([]);
+    const [albumPhotos, setAlbumPhotos] = useState([]);
     const [title, setTitle] = useState('');
+    const [redirect, setRedirect] = useState(false);
+    const onAllFilesUploaded = new Subject();
+    let onAllFilesUploadedSubscription;
 
-    const upload = (file) => {
-        config.axiosInstance.post(`/files/upload`, file)
+    onAllFilesUploadedSubscription = onAllFilesUploaded.subscribe(photos => {
+        config.axiosInstance.post('/albums', {
+            title,
+            albumPhotos: photos
+        })
             .then(response => {
-                console.log('response :>> ', response);
+                if (response.status === 201) {
+                    setRedirect(true);
+                }
             })
-            .catch(err => console.log('err :>> ', err));
-    }
-
-    const onDropFile = (accepted, rejected) => {
-        let blobPromise = new Promise((resolve) => {
-            const reader = new window.FileReader();
-            reader.readAsDataURL(accepted[0]);
-            reader.onloadend = () => {
-                const base64data = reader.result;
-                resolve(base64data);
-            };
-        });
-        blobPromise.then(value => {
-            upload(value);
-        });
-    }
-
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
-        onDrop: (acceptedFiles, rejectedFiles) => {
-            setFiles(acceptedFiles.map(file => Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })));
-            return onDropFile(acceptedFiles, rejectedFiles);
-        }
+            .finally(() => setBackdropOpen(false));
     });
 
-    // files.forEach(f => {
-    //     console.log('f :>> ', f);
-    //     upload(f);
-    // })
+    const handleSaveButton = () => {
+        setBackdropOpen(true);
+        files.forEach(file => {
+            file.restart();
+        });
+    }
 
-    const thumbs = files.map(file => (
-        <div style={thumb} key={file.name}>
-            <div style={thumbInner}>
-                <img
-                    src={file.preview}
-                    style={img}
-                />
-            </div>
-        </div>
-    ));
+    const getUploadParams = ({ meta }) => {
+        const headers = { Authorization: SessionService.getAccessToken() };
+        const url = `${config.SERVER_URL}/files/upload`
+        return { url, meta: { fileUrl: `${url}/${encodeURIComponent(meta.name)}` }, headers }
+    }
+
+    const handleChangeStatus = (_, status, allFiles) => {
+        if (status === 'ready') {
+            setFiles(allFiles);
+        }
+        if (status === 'done') {
+            let photos = [...albumPhotos];
+            photos.push(JSON.parse(_.xhr.response));
+            setAlbumPhotos(photos);
+            const allFilesUploaded = allFiles.every(fileWithMeta => fileWithMeta.meta.status === 'done')
+            if (allFilesUploaded) {
+                onAllFilesUploaded.next(photos);
+            }
+        }
+
+    }
+
+    const handleSubmit = (files, allFiles) => {
+        allFiles.forEach(f => f.remove())
+    }
 
     useEffect(() => () => {
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [files]);
 
+    useEffect(() => {
+        return () => onAllFilesUploadedSubscription.unsubscribe();
+    }, []);
+
+    if (redirect) {
+        return <Redirect to='/albums' />;
+    }
     return (
         <Grid container justify="center" alignItems="center">
             <Paper elevation={3} className="AlbumAdd_detail-paper">
@@ -100,15 +82,29 @@ export default function AlbumAdd() {
                     label="Título"
                     variant="outlined"
                     className="AlbumAdd_form-input" />
-                <section className="container">
-                    <div {...getRootProps({ className: 'AlbumAdd-dropzone' })}>
-                        <input {...getInputProps()} />
-                        <p>Arraste arquivos aqui ou click para selecionar</p>
-                    </div>
-                    <aside style={thumbsContainer}>
-                        {thumbs}
-                    </aside>
-                </section>
+                <Dropzone
+                    getUploadParams={getUploadParams}
+                    onChangeStatus={handleChangeStatus}
+                    onSubmit={handleSubmit}
+                    inputWithFilesContent="Adicionar mais arquivos"
+                    submitButtonDisabled={true}
+                    accept="image/*"
+                    canRestart={false}
+                    autoUpload={false}
+                    inputContent={(_, extra) => (extra.reject ? 'Somente arquivos de imagem' : 'Arraste arquivos aqui ou clique para selecionar')}
+                    styles={{
+                        dropzoneReject: { borderColor: 'red', backgroundColor: '#DAA' },
+                        inputLabel: (_, extra) => (extra.reject ? { color: 'red' } : {}),
+                    }}
+                />
+                <Button
+                    disabled={title === '' || files.length === 0}
+                    onClick={handleSaveButton}
+                    className="AlbumAdd-Save-button"
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    style={{ textTransform: "none" }}>Salvar</Button>
             </Paper>
         </Grid>
 

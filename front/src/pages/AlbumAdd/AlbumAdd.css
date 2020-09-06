@@ -1,4 +1,3 @@
-
 .AlbumAdd_detail-paper {
     padding: 20px;
     margin: 20px;
@@ -19,4 +18,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.AlbumAdd-Save-button {
+    width: 100%;
+    height: 50px;
+    color: #fff !important;
+    margin-top: 10px !important;
+}
+
+.dzu-submitButtonContainer {
+    display: none;
+}
+
+.dzu-inputLabelWithFiles {
+    margin-bottom: 20px;
 }

@@ -34,7 +34,7 @@ public class BlogFileController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<BlogFile> uploadFile(@RequestParam("file") MultipartFile file) {
-		BlogFile arquivo = blogFileService.armazenarArquivo(file);
+		BlogFile arquivo = blogFileService.saveFile(file);
 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/download/{id}")
 				.buildAndExpand(arquivo.getId()).toUri();
@@ -44,7 +44,7 @@ public class BlogFileController {
 
 	@PostMapping("/upload-multiple")
 	public ResponseEntity<List<BlogFile>> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-		List<BlogFile> listaArquivos = Arrays.asList(files).stream().map(file -> blogFileService.armazenarArquivo(file))
+		List<BlogFile> listaArquivos = Arrays.asList(files).stream().map(file -> blogFileService.saveFile(file))
 				.collect(Collectors.toList());
 		return ResponseEntity.ok().body(listaArquivos);
 	}

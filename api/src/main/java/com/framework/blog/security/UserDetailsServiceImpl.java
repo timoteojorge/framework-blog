@@ -2,7 +2,6 @@ package com.framework.blog.security;
 
 import com.framework.blog.entity.User;
 import com.framework.blog.repository.UserRepository;
-import com.framework.blog.security.BlogUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -9,6 +9,7 @@ import Posts from './pages/Posts';
 import UserAdd from './pages/UserAdd';
 import SessionService from './services/SessionService';
 import AlbumAdd from './pages/AlbumAdd';
+import 'react-dropzone-uploader/dist/styles.css'
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
