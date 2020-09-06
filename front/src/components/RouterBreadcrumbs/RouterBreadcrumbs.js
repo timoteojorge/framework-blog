@@ -44,11 +44,11 @@ export default function RouterBreadcrumbs() {
 
                 return last ? (
                   <Typography color="textPrimary" key={to}>
-                    {value}
+                    {value.charAt(0).toUpperCase() + value.slice(1)}
                   </Typography>
                 ) : (
                     <RouterLink color="inherit" to={to} key={to}>
-                      {value}
+                      {value.charAt(0).toUpperCase() + value.slice(1)}
                     </RouterLink>
                   );
               })}
