@@ -69,11 +69,6 @@ export default function UserAdd({ setBackdropOpen }) {
                     {renderAlert()}
                 </div>
                 <Paper elevation={3} className={`UserAdd_detail-paper`}>
-                    <Typography variant="h5">
-                        Adicionar Usuário
-                    </Typography>
-                </Paper>
-                <Paper elevation={3} className={`UserAdd_detail-paper`}>
                     <Grid container>
                         <TextField
                             value={name}

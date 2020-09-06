@@ -13,6 +13,7 @@ import 'react-dropzone-uploader/dist/styles.css'
 import "react-image-gallery/styles/css/image-gallery.css";
 
 import Albums from './pages/Albums/Albums';
+import RouterBreadcrumbs from './components/RouterBreadcrumbs/RouterBreadcrumbs';
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -81,11 +82,12 @@ export default function App() {
       {renderMenu()}
       {renderBackdrop()}
       <div className={classes.contentWidth}>
+        <RouterBreadcrumbs></RouterBreadcrumbs>
         <Switch>
           <Route path="/login">
             <Login setAccessToken={setAccessToken} />
           </Route>
-          <PrivateRoute exact={true} path="/posts/create" accessToken={accessToken}>
+          <PrivateRoute exact={true} path="/posts/adicionar" accessToken={accessToken}>
             <PostAdd setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
           <PrivateRoute path="/posts/:id" accessToken={accessToken}>
@@ -94,13 +96,13 @@ export default function App() {
           <PrivateRoute path="/posts" accessToken={accessToken}>
             <Posts setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
-          <PrivateRoute exact={true} path="/users/add" accessToken={accessToken}>
+          <PrivateRoute exact={true} path="/usuarios/adicionar" accessToken={accessToken}>
             <UserAdd setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
-          <PrivateRoute exact={true} path="/albums/add" accessToken={accessToken}>
+          <PrivateRoute exact={true} path="/albuns/adicionar" accessToken={accessToken}>
             <AlbumAdd setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
-          <PrivateRoute exact={true} path="/albums" accessToken={accessToken}>
+          <PrivateRoute exact={true} path="/albuns" accessToken={accessToken}>
             <Albums setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
           <Route path="/">

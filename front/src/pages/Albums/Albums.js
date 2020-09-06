@@ -32,7 +32,7 @@ export default function Albums({ setBackdropOpen }) {
 
     const removePost = (post) => {
         setBackdropOpen(true);
-        config.axiosInstance.delete(`/posts/${post.id}`)
+        config.axiosInstance.delete(`/albums/${post.id}`)
             .then(_ => {
                 setBackdropOpen(false);
                 fetchAlbums();
@@ -76,14 +76,13 @@ export default function Albums({ setBackdropOpen }) {
     const renderAlbums = () => {
         return albums.map(album => {
             return (
-                <Paper elevation={3} className="paper" key={album.id} >
-                    <Grid container direction="row">
-                        <Grid item>
-                            <Grid container direction="column" className="post-details">
+                <Paper elevation={3} className="Albums_paper" key={album.id} >
+                    <Grid container direction="row" justify="center" alignContent="center">
+                        <Grid item className="Albums_content">
+                            <Grid container direction="column" className="Albums_details">
                                 <Grid container>
                                     <Grid item xs={11}>
-                                        <Typography variant="h3"
-                                            className="post-title">
+                                        <Typography variant="h3">
                                             {album.title}
                                         </Typography>
                                     </Grid>
@@ -93,7 +92,7 @@ export default function Albums({ setBackdropOpen }) {
                                     {renderAlbumGallery(album)}
                                 </Grid>
                                 <Grid container direction="row" justify="flex-end" alignContent="flex-end">
-                                    <span className="author-label">
+                                    <span className="Albums_author-label">
                                         Postado por <b>{album.authorName}</b> em {moment(album.createdAt).format('DD-MM-YYYY')}
                                     </span>
                                 </Grid>
@@ -110,11 +109,11 @@ export default function Albums({ setBackdropOpen }) {
         <div>
             {
                 albums.length === 0 ?
-                    <Grid className="main-container" container direction="column" justify="center" alignItems="center">
+                    <Grid className="Albums_main-container" container direction="column" justify="center" alignItems="center">
 
-                        {noAlbumsFound ? <Typography variant="h5" className="no-posts-found">Nenhum post foi encontrado.</Typography> : null}
+                        {noAlbumsFound ? <Typography variant="h5" className="Albums_no-albums-found">Nenhum post foi encontrado.</Typography> : null}
                     </Grid> :
-                    <Grid container direction="column" alignItems="center" className="posts-container">
+                    <Grid container direction="column" alignItems="center">
                         {renderAlbums()}
                     </Grid>
             }

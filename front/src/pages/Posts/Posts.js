@@ -106,7 +106,7 @@ export default function Posts({ setBackdropOpen }) {
 
                         {noPostsFound ? <Typography variant="h5" className="Posts_no-posts-found">Nenhum post foi encontrado.</Typography> : null}
                     </Grid> :
-                    <Grid container direction="column" alignItems="center" className="Posts_posts-container">
+                    <Grid container direction="column" alignItems="center">
                         {renderPosts()}
                     </Grid>
             }

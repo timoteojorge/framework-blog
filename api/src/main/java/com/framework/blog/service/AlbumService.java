@@ -13,6 +13,9 @@ import com.framework.blog.repository.UserRepository;
 import com.framework.blog.security.BlogUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -86,5 +89,13 @@ public class AlbumService {
         } catch (IOException e) {
             throw new FileStorageException(messageSource.getMessage("erro.salvar.arquivo", null, Locale.getDefault()));
         }
+    }
+
+    public Page<AlbumDTO> findAll(PageRequest pageRequest) {
+        Page<Album> all = this.repository.findAll(pageRequest);
+        return new PageImpl<>(all
+                .stream()
+                .map(alb -> alb.toDTO())
+                .collect(Collectors.toList()), all.getPageable(), all.getTotalElements());
     }
 }

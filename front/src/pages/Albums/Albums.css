@@ -2,28 +2,23 @@
     min-height: 100vh;
 }
 
-.no-posts-found {
+.Albums_no-albums-found {
     color: #b5b4b4 !important;
 }
 
-.paper {
+.Albums_paper {
     padding: 20px;
-    width: 80%;
     margin-top: 20px;
+    width: 100%;
 }
 
-.post-details {
+.Albums_details {
     padding: 20px;
 }
 
-.post-type {
-    color: #8d8c8c;
-}
-
-.posts-container {
-    margin-top: 30px;
-}
-
-.author-label {
+.Albums_author-label {
     font-size: 12px;
+}
+.Albums_content{
+    width: 100%;
 }

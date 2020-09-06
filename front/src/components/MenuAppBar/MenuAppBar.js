@@ -43,20 +43,20 @@ export default function MenuAppBar({ accessToken, setAccessToken }) {
     }
     const handleAddPostClick = () => {
         setDrawerOpen(false);
-        history.push('/posts/create');
+        history.push('/posts/adicionar');
     }
 
     const handleAddUserClick = () => {
         setDrawerOpen(false);
-        history.push('/users/add');
+        history.push('/usuarios/adicionar');
     }
     const handleAllAlbumsClick = () => {
         setDrawerOpen(false);
-        history.push('/albums');
+        history.push('/albuns');
     }
     const handleAddAlmbumClick = () => {
         setDrawerOpen(false);
-        history.push('/albums/add');
+        history.push('/albuns/adicionar');
     }
 
     const showUserMenu = Boolean(anchorEl);
