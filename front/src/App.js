@@ -10,6 +10,9 @@ import UserAdd from './pages/UserAdd';
 import SessionService from './services/SessionService';
 import AlbumAdd from './pages/AlbumAdd';
 import 'react-dropzone-uploader/dist/styles.css'
+import "react-image-gallery/styles/css/image-gallery.css";
+
+import Albums from './pages/Albums/Albums';
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -98,7 +101,7 @@ export default function App() {
             <AlbumAdd setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
           <PrivateRoute exact={true} path="/albums" accessToken={accessToken}>
-            <UserAdd setBackdropOpen={setBackdropOpen} />
+            <Albums setBackdropOpen={setBackdropOpen} />
           </PrivateRoute>
           <Route path="/">
             <Redirect to={{ pathname: "/login" }} />
