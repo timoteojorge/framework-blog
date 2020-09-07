@@ -77,12 +77,20 @@ export default function App() {
       </Backdrop>);
   }
 
+  const renderBreadcrumb = () => {
+    if (accessToken) {
+      return (
+        <RouterBreadcrumbs></RouterBreadcrumbs>
+      );
+    }
+  }
+
   return (
     <React.Fragment>
       {renderMenu()}
       {renderBackdrop()}
       <div className={classes.contentWidth}>
-        <RouterBreadcrumbs></RouterBreadcrumbs>
+        {renderBreadcrumb()}
         <Switch>
           <Route path="/login">
             <Login setAccessToken={setAccessToken} />

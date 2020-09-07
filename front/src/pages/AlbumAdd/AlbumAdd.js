@@ -71,7 +71,7 @@ export default function AlbumAdd({ setBackdropOpen }) {
     }, []);
 
     if (redirect) {
-        return <Redirect to='/albums' />;
+        return <Redirect to='/albuns' />;
     }
     return (
         <Grid container justify="center" alignItems="center">

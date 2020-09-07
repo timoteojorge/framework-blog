@@ -1,4 +1,4 @@
-import { Grid, IconButton, Paper, Typography } from '@material-ui/core';
+import { Grid, IconButton, Paper, Typography, Button } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -10,13 +10,17 @@ import './Albums.css';
 export default function Albums({ setBackdropOpen }) {
     const [noAlbumsFound, setNoAlbumsFound] = useState(false);
     const [albums, setAlbums] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(false);
 
-    const fetchAlbums = () => {
-        config.axiosInstance.get(`/albums`)
+    const fetchAlbums = (page) => {
+        config.axiosInstance.get(`/albums?page=${page}`)
             .then(res => {
                 if (res.status === 200) {
+                    setCurrentPage(res.data.pageable.pageNumber);
+                    setIsLastPage(res.data.last);
                     if (res.data.content.length > 0) {
-                        setAlbums(res.data.content);
+                        setAlbums([...albums, ...res.data.content]);
                     } else {
                         setNoAlbumsFound(true);
                     }
@@ -25,7 +29,7 @@ export default function Albums({ setBackdropOpen }) {
     }
 
     useEffect(() => {
-        fetchAlbums();
+        fetchAlbums(0);
         return () => null;
     }, [])
 
@@ -57,7 +61,7 @@ export default function Albums({ setBackdropOpen }) {
 
     const renderAlbumGallery = (album) => {
         let images = [];
-        album.albumPhotos.map(photo => {
+        album.albumPhotos.forEach(photo => {
             let image = new Image();
             image.src = `data:${photo.fileType};base64,${photo.data}`;
             images.push(
@@ -66,11 +70,24 @@ export default function Albums({ setBackdropOpen }) {
                     thumbnail: image.src,
                 }
             )
-        })
+        });
         return (
             <ImageGallery items={images} />
         );
+    }
 
+    const renderMoreButton = () => {
+        if (!isLastPage) {
+            return (
+                <Button
+                    onClick={() => fetchAlbums(currentPage + 1)}
+                    className="AlbumAdd-Save-button"
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    style={{ textTransform: "none" }}>Carregar Mais</Button>
+            );
+        }
     }
 
     const renderAlbums = () => {
@@ -110,11 +127,11 @@ export default function Albums({ setBackdropOpen }) {
             {
                 albums.length === 0 ?
                     <Grid className="Albums_main-container" container direction="column" justify="center" alignItems="center">
-
-                        {noAlbumsFound ? <Typography variant="h5" className="Albums_no-albums-found">Nenhum post foi encontrado.</Typography> : null}
+                        {noAlbumsFound ? <Typography variant="h5" className="Albums_no-albums-found">Nenhum Album foi encontrado.</Typography> : null}
                     </Grid> :
                     <Grid container direction="column" alignItems="center">
                         {renderAlbums()}
+                        {renderMoreButton()}
                     </Grid>
             }
         </div>

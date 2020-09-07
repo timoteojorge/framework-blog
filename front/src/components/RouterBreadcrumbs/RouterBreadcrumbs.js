@@ -1,33 +1,12 @@
 import { Paper } from '@material-ui/core';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { Route } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import './RouterBreadcrumbs.css';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: 360,
-  },
-  lists: {
-    backgroundColor: theme.palette.background.paper,
-    marginTop: theme.spacing(1),
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
-
-const LinkRouter = (props) => <Link {...props} component={RouterLink} />;
-
 export default function RouterBreadcrumbs() {
-  const classes = useStyles();
-
   return (
     <Paper elevation={3} className="RouterBreadcrumbs_paper">
       <Route>

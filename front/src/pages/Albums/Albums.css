@@ -22,3 +22,7 @@
 .Albums_content{
     width: 100%;
 }
+
+.image-gallery-content .image-gallery-slide .image-gallery-image {
+    max-height: 300px !important;
+}

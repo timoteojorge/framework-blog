@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography, IconButton } from '@material-ui/core';
+import { Grid, Paper, Typography, IconButton, Button } from '@material-ui/core';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
@@ -9,14 +9,18 @@ import { Delete } from '@material-ui/icons';
 
 export default function Posts({ setBackdropOpen }) {
     const [noPostsFound, setNoPostsFound] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(false);
     const [posts, setPosts] = useState([]);
 
-    const fetchPosts = () => {
-        config.axiosInstance.get(`/posts`)
+    const fetchPosts = (page) => {
+        config.axiosInstance.get(`/posts?page=${page}`)
             .then(res => {
                 if (res.status === 200) {
+                    setCurrentPage(res.data.pageable.pageNumber);
+                    setIsLastPage(res.data.last);
                     if (res.data.content.length > 0) {
-                        setPosts(res.data.content);
+                        setPosts([...posts, ...res.data.content]);
                     } else {
                         setNoPostsFound(true);
                     }
@@ -25,7 +29,7 @@ export default function Posts({ setBackdropOpen }) {
     }
 
     useEffect(() => {
-        fetchPosts();
+        fetchPosts(0);
         return () => null;
     }, [])
 
@@ -49,7 +53,6 @@ export default function Posts({ setBackdropOpen }) {
     const user = SessionService.getLoggedUser().user;
 
     const renderRemovePost = (blogPost) => {
-        console.log('user.id === blogPost.authorId ', user.id === blogPost.authorId);
         if (user.id === blogPost.authorId) {
             return (
                 <Grid item xs={1}>
@@ -60,6 +63,20 @@ export default function Posts({ setBackdropOpen }) {
                 </Grid>
             )
         };
+    }
+
+    const renderMoreButton = () => {
+        if (!isLastPage) {
+            return (
+                <Button
+                    onClick={() => fetchPosts(currentPage + 1)}
+                    className="PostAdd_Save-button"
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    style={{ textTransform: "none" }}>Carregar Mais</Button>
+            );
+        }
     }
 
     const renderPosts = () => {
@@ -103,11 +120,11 @@ export default function Posts({ setBackdropOpen }) {
             {
                 posts.length === 0 ?
                     <Grid className="Posts_main-container" container direction="column" justify="center" alignItems="center">
-
                         {noPostsFound ? <Typography variant="h5" className="Posts_no-posts-found">Nenhum post foi encontrado.</Typography> : null}
                     </Grid> :
                     <Grid container direction="column" alignItems="center">
                         {renderPosts()}
+                        {renderMoreButton()}
                     </Grid>
             }
         </div>
