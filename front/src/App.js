@@ -14,6 +14,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 
 import Albums from './pages/Albums/Albums';
 import RouterBreadcrumbs from './components/RouterBreadcrumbs/RouterBreadcrumbs';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     },
     margin: 'auto'
   },
+  alert: {
+    marginTop: 10
+  }
 }));
 
 function PrivateRoute({ children, accessToken, exact, ...rest }) {
@@ -59,6 +63,9 @@ export default function App() {
   const storedAccessToken = sessionService.getAccessToken();
   const [accessToken, setAccessToken] = useState(storedAccessToken);
   const [backdropOpen, setBackdropOpen] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertType, setAlertType] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(false);
   const classes = useStyles();
 
   const renderMenu = () => {
@@ -85,33 +92,55 @@ export default function App() {
     }
   }
 
+  const renderAlert = () => {
+    if (!openAlert) return;
+    if (alertType === 'success') {
+      return (
+        <Alert severity="success" className={classes.alert}>{alertMessage}</Alert>
+      );
+    }
+    if (alertType === 'error') {
+      return (
+        <Alert severity="error" className={classes.alert}>{alertMessage}</Alert>
+      );
+    }
+  }
+
+  const showAlert = (type, msg) => {
+    setAlertType(type);
+    setAlertMessage(msg);
+    setOpenAlert(true);
+    setTimeout(() => setOpenAlert(false), 4000);
+  }
+
   return (
     <React.Fragment>
       {renderMenu()}
       {renderBackdrop()}
       <div className={classes.contentWidth}>
+        {renderAlert()}
         {renderBreadcrumb()}
         <Switch>
           <Route path="/login">
             <Login setAccessToken={setAccessToken} />
           </Route>
           <PrivateRoute exact={true} path="/posts/adicionar" accessToken={accessToken}>
-            <PostAdd setBackdropOpen={setBackdropOpen} />
+            <PostAdd setBackdropOpen={setBackdropOpen} showAlert={showAlert} />
           </PrivateRoute>
           <PrivateRoute path="/posts/:id" accessToken={accessToken}>
-            <PostDetail setBackdropOpen={setBackdropOpen} />
+            <PostDetail setBackdropOpen={setBackdropOpen} showAlert={showAlert} />
           </PrivateRoute>
           <PrivateRoute path="/posts" accessToken={accessToken}>
-            <Posts setBackdropOpen={setBackdropOpen} />
+            <Posts setBackdropOpen={setBackdropOpen} showAlert={showAlert} />
           </PrivateRoute>
           <PrivateRoute exact={true} path="/usuarios/adicionar" accessToken={accessToken}>
-            <UserAdd setBackdropOpen={setBackdropOpen} />
+            <UserAdd setBackdropOpen={setBackdropOpen} showAlert={showAlert} />
           </PrivateRoute>
           <PrivateRoute exact={true} path="/albuns/adicionar" accessToken={accessToken}>
-            <AlbumAdd setBackdropOpen={setBackdropOpen} />
+            <AlbumAdd setBackdropOpen={setBackdropOpen} showAlert={showAlert} />
           </PrivateRoute>
           <PrivateRoute exact={true} path="/albuns" accessToken={accessToken}>
-            <Albums setBackdropOpen={setBackdropOpen} />
+            <Albums setBackdropOpen={setBackdropOpen} showAlert={showAlert} />
           </PrivateRoute>
           <Route path="/">
             <Redirect to={{ pathname: "/login" }} />

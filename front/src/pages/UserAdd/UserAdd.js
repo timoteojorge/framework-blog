@@ -1,18 +1,15 @@
 import { Button, Grid, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
 import { LockOpen, Visibility, VisibilityOff } from '@material-ui/icons';
-import Alert from '@material-ui/lab/Alert';
 import React, { useState } from 'react';
 import config from '../../config';
 import './UserAdd.css';
 
-export default function UserAdd({ setBackdropOpen }) {
+export default function UserAdd({ setBackdropOpen, showAlert }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [invalidEmail, setInvalidEmail] = useState(false);
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [userAdded, setUserAdded] = useState(false);
-    const [errorSaving, setErrorSaving] = useState(false);
 
     const handleSaveButton = () => {
         setBackdropOpen(true);
@@ -24,18 +21,16 @@ export default function UserAdd({ setBackdropOpen }) {
             .then(response => {
                 setBackdropOpen(false);
                 if (response.status === 201) {
-                    setUserAdded(true);
+                    showAlert('success', 'Usuário foi adicionado com suceesso!');
                     setName('');
                     setEmail('');
                     setPassword('');
-                    setTimeout(() => setUserAdded(false), 4000);
                 }
             })
             .catch(_ => {
                 setBackdropOpen(false);
-                setErrorSaving(true);
-                setTimeout(() => setErrorSaving(false), 4000);
-            })
+                showAlert('error', 'Ocorreu uma falha ao tentar salvar o usuário!');
+            });
     }
 
     const validateEmail = (email) => {
@@ -48,25 +43,9 @@ export default function UserAdd({ setBackdropOpen }) {
         setInvalidEmail(!validateEmail(email));
     }
 
-    const renderAlert = () => {
-        if (userAdded) {
-            return (
-                <Alert severity="success">Usuário foi adicionado com suceesso!</Alert>
-            );
-        }
-        if (errorSaving) {
-            return (
-                <Alert severity="error">Ocorreu uma falha ao tentar salvar o usuário!</Alert>
-            );
-        }
-    }
-
     return (
         <div>
             <Grid direction="column" container justify="center" alignItems="center">
-                <div className="UserAdd_alert">
-                    {renderAlert()}
-                </div>
                 <Paper elevation={3} className={`UserAdd_detail-paper`}>
                     <Grid container>
                         <TextField
