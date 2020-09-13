@@ -1,37 +1,19 @@
 import { Button, Grid, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
 import { LockOpen, Visibility, VisibilityOff } from '@material-ui/icons';
-import React, { useState } from 'react';
-import config from '../../config';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux/lib/hooks/useSelector';
+import { saveNewUser, setEmail, setInvalidEmail, setName, setPassword, setShowPassword } from '../../redux/actions/userAdd';
 import './UserAdd.css';
 
-export default function UserAdd({ setBackdropOpen, showAlert }) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [invalidEmail, setInvalidEmail] = useState(false);
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+export default function UserAdd() {
+    const name = useSelector(state => state.userAdd.name);
+    const email = useSelector(state => state.userAdd.email);
+    const invalidEmail = useSelector(state => state.userAdd.invalidEmail);
+    const password = useSelector(state => state.userAdd.password);
+    const showPassword = useSelector(state => state.userAdd.showPassword);
+    const dispatch = useDispatch()
 
-    const handleSaveButton = () => {
-        setBackdropOpen(true);
-        config.axiosInstance.post('/users', {
-            email,
-            name,
-            password
-        })
-            .then(response => {
-                setBackdropOpen(false);
-                if (response.status === 201) {
-                    showAlert('success', 'Usuário foi adicionado com suceesso!');
-                    setName('');
-                    setEmail('');
-                    setPassword('');
-                }
-            })
-            .catch(_ => {
-                setBackdropOpen(false);
-                showAlert('error', 'Ocorreu uma falha ao tentar salvar o usuário!');
-            });
-    }
 
     const validateEmail = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -39,8 +21,9 @@ export default function UserAdd({ setBackdropOpen, showAlert }) {
     }
 
     const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-        setInvalidEmail(!validateEmail(email));
+        const email = event.target.value;
+        dispatch(setEmail(email));
+        dispatch(setInvalidEmail(!validateEmail(email)))
     }
 
     return (
@@ -50,7 +33,7 @@ export default function UserAdd({ setBackdropOpen, showAlert }) {
                     <Grid container>
                         <TextField
                             value={name}
-                            onChange={(event) => setName(event.target.value)}
+                            onChange={(event) => dispatch(setName(event.target.value))}
                             label="Nome"
                             variant="outlined"
                             autoComplete="off"
@@ -74,7 +57,7 @@ export default function UserAdd({ setBackdropOpen, showAlert }) {
                             type={showPassword ? 'text' : 'password'}
                             value={password}
                             autoComplete="off"
-                            onChange={(event) => setPassword(event.target.value)}
+                            onChange={(event) => dispatch(setPassword(event.target.value))}
                             variant="outlined"
                             InputProps={{
                                 startAdornment: (
@@ -85,7 +68,7 @@ export default function UserAdd({ setBackdropOpen, showAlert }) {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton
-                                            onClick={() => setShowPassword(!showPassword)}
+                                            onClick={() => dispatch(setShowPassword(!showPassword))}
                                             onMouseDown={(event) => event.preventDefault()}
                                         >
                                             {showPassword ? <Visibility /> : <VisibilityOff />}
@@ -96,7 +79,7 @@ export default function UserAdd({ setBackdropOpen, showAlert }) {
                     </Grid>
                     <Button
                         disabled={email === '' || name === '' || password === '' || invalidEmail}
-                        onClick={handleSaveButton}
+                        onClick={() => dispatch(saveNewUser(email, name, password))}
                         className="UserAdd_Save-button"
                         size="large"
                         variant="contained"

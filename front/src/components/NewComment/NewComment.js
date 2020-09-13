@@ -1,34 +1,19 @@
 
 
 import { Button } from '@material-ui/core';
-import React, { useState } from 'react';
-import config from '../../config';
+import React from 'react';
+import { useDispatch } from 'react-redux/lib/hooks/useDispatch';
+import { useSelector } from 'react-redux/lib/hooks/useSelector';
+import { saveNewComment, setNewCommentContent } from '../../redux/actions/postDetails';
 import SessionService from '../../services/SessionService';
 import './NewComment.css';
 
+export default function NewComment() {
 
-export default function NewComment({ setBackdropOpen, postId, fetchComments }) {
-
-    const [newComment, setNewComment] = useState('');
     const sessionService = SessionService;
-
-    const handleSaveComment = () => {
-        setBackdropOpen(true);
-        config.axiosInstance.post(`/posts/${postId}/comments`, {
-            content: newComment,
-            postId,
-            authorId: sessionService.getLoggedUser().user.id
-        })
-            .then(res => {
-                setBackdropOpen(false);
-                setNewComment('')
-                fetchComments();
-            })
-            .catch((err) => {
-                console.log(err);
-                setBackdropOpen(false);
-            });
-    }
+    const newComment = useSelector(state => state.postDetails.newCommentContent);
+    const postId = useSelector(state => state.postDetails.currentPost.id);
+    const dispatch = useDispatch();
 
     return (
         <React.Fragment>
@@ -36,7 +21,7 @@ export default function NewComment({ setBackdropOpen, postId, fetchComments }) {
                 <textarea
                     className="NewComment_textarea"
                     value={newComment}
-                    onChange={(event) => setNewComment(event.target.value)}
+                    onChange={(event) => dispatch(setNewCommentContent(event.target.value))}
                     rows="4"
                     cols="50"
                     placeholder="Insira seu comentário :)">
@@ -44,7 +29,7 @@ export default function NewComment({ setBackdropOpen, postId, fetchComments }) {
                 <Button
                     className="NewComment_button"
                     disabled={newComment === ''}
-                    onClick={handleSaveComment}
+                    onClick={() => dispatch(saveNewComment(newComment, postId, sessionService.getLoggedUser().user.id))}
                     size="large"
                     variant="contained"
                     color="primary"

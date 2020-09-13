@@ -6,6 +6,8 @@ import anonymousUserImage from '../../../assets/img/avatar.jpeg';
 import './Comments.css';
 import { Delete } from '@material-ui/icons';
 import SessionService from '../../services/SessionService';
+import { useDispatch } from 'react-redux/lib/hooks/useDispatch';
+import { removeComment } from '../../redux/actions/postDetails';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -14,10 +16,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Comments({ comments, removeComment }) {
+export default function Comments({ comments }) {
 
     const classes = useStyles();
-
+    const dispatch = useDispatch();
     const user = SessionService.getLoggedUser().user;
 
     const renderRemove = (singleComment) => {
@@ -25,7 +27,7 @@ export default function Comments({ comments, removeComment }) {
             return (
                 <Grid item xs={1}>
                     <IconButton
-                        onClick={() => removeComment(singleComment.id)}>
+                        onClick={() => dispatch(removeComment(singleComment.postId, singleComment.id))}>
                         <Delete />
                     </IconButton>
                 </Grid>
