@@ -1,48 +1,24 @@
-import { Grid, IconButton, Paper, Typography, Button } from '@material-ui/core';
+import { Button, Grid, IconButton, Paper, Typography } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ImageGallery from 'react-image-gallery';
-import config from '../../config';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAlbums, removeAlbum } from '../../redux/actions/albums';
 import SessionService from '../../services/SessionService';
 import './Albums.css';
 
-export default function Albums({ setBackdropOpen }) {
-    const [noAlbumsFound, setNoAlbumsFound] = useState(false);
-    const [albums, setAlbums] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [isLastPage, setIsLastPage] = useState(false);
-
-    const fetchAlbums = (page) => {
-        config.axiosInstance.get(`/albums?page=${page}`)
-            .then(res => {
-                if (res.status === 200) {
-                    setCurrentPage(res.data.pageable.pageNumber);
-                    setIsLastPage(res.data.last);
-                    if (res.data.content.length > 0) {
-                        setAlbums([...albums, ...res.data.content]);
-                    } else {
-                        setNoAlbumsFound(true);
-                    }
-                }
-            });
-    }
+export default function Albums() {
+    const noAlbumsFound = useSelector(state => state.albums.noAlbumsFound);
+    const albums = useSelector(state => state.albums.data);
+    const currentPage = useSelector(state => state.albums.currentPage);
+    const isLastPage = useSelector(state => state.albums.isLastPage);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchAlbums(0);
+        dispatch(fetchAlbums(0));
         return () => null;
     }, [])
-
-
-    const removePost = (post) => {
-        setBackdropOpen(true);
-        config.axiosInstance.delete(`/albums/${post.id}`)
-            .then(_ => {
-                setBackdropOpen(false);
-                fetchAlbums();
-            })
-            .catch(_ => setBackdropOpen(false));
-    }
 
     const user = SessionService.getLoggedUser().user;
 
@@ -51,7 +27,7 @@ export default function Albums({ setBackdropOpen }) {
             return (
                 <Grid item xs={1}>
                     <IconButton
-                        onClick={() => removePost(album)}>
+                        onClick={() => dispatch(removeAlbum(album.id))}>
                         <Delete />
                     </IconButton>
                 </Grid>
@@ -80,7 +56,7 @@ export default function Albums({ setBackdropOpen }) {
         if (!isLastPage) {
             return (
                 <Button
-                    onClick={() => fetchAlbums(currentPage + 1)}
+                    onClick={() => dispatch(fetchAlbums(currentPage + 1))}
                     className="AlbumAdd-Save-button"
                     size="large"
                     variant="contained"

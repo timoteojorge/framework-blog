@@ -8,7 +8,6 @@ const initialState = {
         data: [],
         currentPage: 0,
         isLastPage: false,
-        error: '',
         noPostsFound: false
     },
     common: {
@@ -36,6 +35,12 @@ const initialState = {
         htmlContent: '',
         redirect: false,
         title: ''
+    },
+    albums: {
+        data: [],
+        currentPage: 0,
+        isLastPage: false,
+        noAlbumsFound: false
     }
 };
 
