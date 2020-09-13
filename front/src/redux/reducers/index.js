@@ -5,6 +5,7 @@ import postDetails from "./postDetails";
 import userAdd from "./userAdd";
 import postAdd from "./postAdd";
 import albums from "./albums";
+import albumAdd from "./albumAdd";
 
 export default combineReducers({ 
     posts,
@@ -12,5 +13,6 @@ export default combineReducers({
     postDetails,
     userAdd,
     postAdd,
-    albums
+    albums,
+    albumAdd
  });

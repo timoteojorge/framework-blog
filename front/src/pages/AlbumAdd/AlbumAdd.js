@@ -1,36 +1,23 @@
 import { Button, Grid, Paper, TextField } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Dropzone from 'react-dropzone-uploader';
+import { useDispatch } from 'react-redux/lib/hooks/useDispatch';
+import { useSelector } from 'react-redux/lib/hooks/useSelector';
 import { Redirect } from 'react-router-dom';
-import { Subject } from 'rxjs';
 import config from '../../config';
+import { handleDropzoneChangeStatus, setTitle } from '../../redux/actions/albumAdd';
 import SessionService from '../../services/SessionService';
 import './AlbumAdd.css';
 
 
-export default function AlbumAdd({ setBackdropOpen }) {
-    const [files, setFiles] = useState([]);
-    const [albumPhotos, setAlbumPhotos] = useState([]);
-    const [title, setTitle] = useState('');
-    const [redirect, setRedirect] = useState(false);
-    const onAllFilesUploaded = new Subject();
-    let onAllFilesUploadedSubscription;
-
-    onAllFilesUploadedSubscription = onAllFilesUploaded.subscribe(photos => {
-        config.axiosInstance.post('/albums', {
-            title,
-            albumPhotos: photos
-        })
-            .then(response => {
-                if (response.status === 201) {
-                    setRedirect(true);
-                }
-            })
-            .finally(() => setBackdropOpen(false));
-    });
+export default function AlbumAdd() {
+    const files = useSelector(state => state.albumAdd.files);
+    const title = useSelector(state => state.albumAdd.title);
+    const albumPhotos = useSelector(state => state.albumAdd.albumPhotos);
+    const redirect = useSelector(state => state.albumAdd.redirect);
+    const dispatch = useDispatch();
 
     const handleSaveButton = () => {
-        setBackdropOpen(true);
         files.forEach(file => {
             file.restart();
         });
@@ -42,33 +29,13 @@ export default function AlbumAdd({ setBackdropOpen }) {
         return { url, meta: { fileUrl: `${url}/${encodeURIComponent(meta.name)}` }, headers }
     }
 
-    const handleChangeStatus = (_, status, allFiles) => {
-        if (status === 'ready') {
-            setFiles(allFiles);
-        }
-        if (status === 'done') {
-            let photos = [...albumPhotos];
-            photos.push(JSON.parse(_.xhr.response));
-            setAlbumPhotos(photos);
-            const allFilesUploaded = allFiles.every(fileWithMeta => fileWithMeta.meta.status === 'done')
-            if (allFilesUploaded) {
-                onAllFilesUploaded.next(photos);
-            }
-        }
-
-    }
-
-    const handleSubmit = (files, allFiles) => {
+    const handleSubmit = (_, allFiles) => {
         allFiles.forEach(f => f.remove())
     }
 
     useEffect(() => () => {
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [files]);
-
-    useEffect(() => {
-        return () => onAllFilesUploadedSubscription.unsubscribe();
-    }, []);
 
     if (redirect) {
         return <Redirect to='/albuns' />;
@@ -78,13 +45,13 @@ export default function AlbumAdd({ setBackdropOpen }) {
             <Paper elevation={3} className="AlbumAdd_detail-paper">
                 <TextField
                     value={title}
-                    onChange={(event) => setTitle(event.target.value)}
+                    onChange={(event) => dispatch(setTitle(event.target.value))}
                     label="Título"
                     variant="outlined"
                     className="AlbumAdd_form-input" />
                 <Dropzone
                     getUploadParams={getUploadParams}
-                    onChangeStatus={handleChangeStatus}
+                    onChangeStatus={(_, status, allFiles) => dispatch(handleDropzoneChangeStatus(_, status, allFiles, title, albumPhotos))}
                     onSubmit={handleSubmit}
                     inputWithFilesContent="Adicionar mais arquivos"
                     submitButtonDisabled={true}

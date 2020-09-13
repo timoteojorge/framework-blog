@@ -41,6 +41,12 @@ const initialState = {
         currentPage: 0,
         isLastPage: false,
         noAlbumsFound: false
+    },
+    albumAdd: {
+        files: [],
+        albumPhotos: [],
+        title: '',
+        redirect: false
     }
 };
 
