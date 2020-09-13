@@ -14,7 +14,7 @@ export default function (state = {}, action) {
         case FETCH_POSTS_SUCCESS: {
             const { data, currentPage, isLastPage } = action.payload;
             return Object.assign({}, state, {
-                data: [...state.data, ...data],
+                data: currentPage === 0 ? [...data] : [...state.data, ...data],
                 currentPage,
                 isLastPage,
                 error: '',

@@ -1,3 +1,4 @@
+import EditorState from 'draft-js/lib/EditorState';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from "./reducers";
@@ -29,6 +30,12 @@ const initialState = {
         password: '',
         showPassword: false,
         invalidEmail: false
+    },
+    postAdd: {
+        editorState: EditorState.createEmpty(),
+        htmlContent: '',
+        redirect: false,
+        title: ''
     }
 };
 

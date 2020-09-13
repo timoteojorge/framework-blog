@@ -64,7 +64,7 @@ export default function Posts() {
             return (
                 <Paper elevation={3} className="Posts_paper" key={blogPost.id} >
                     <Grid container direction="row">
-                        <Grid item>
+                        <Grid item className="Posts_card-content">
                             <Grid container direction="column" className="Posts_post-details">
                                 <Grid container>
                                     <Grid item xs={11}>
